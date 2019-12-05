@@ -1,6 +1,9 @@
 const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const timerContainer = document.getElementById('timer');
+const startButton = document.getElementById('start');
+
+var state = "";
 const myQuestions = [
     {
       question: "Who is responsible for lithium batteries and the modern age?",
@@ -51,19 +54,36 @@ const myQuestions = [
   ];
 
 
+function wait() {
+    var answerButtons = document.getElementsByClassName('button-answer');
+    answerButtons.addEventListener("click", changeState);
+    if (state === "wait") {
+        setTimeout(wait, 500)
+    }
+    else {
+        return
+    }
+}
 
-  function buildQuiz(){
+
+function changeState() {
+    state = "";
+}
+
+function buildQuiz() {
+    startButton.style.visibility = 'hidden';
     var count = 75;
-    var interval = setInterval(function(){
-        timerContainer.innerHTML="Time: "+count;
+    var state = "wait"
+    var interval = setInterval(function () {
+        timerContainer.innerHTML = "Time: " + count;
         count--;
-        if (count === 0){
+        if (count === 0) {
             clearInterval(interval);
             alert("You're out of time!");
         }
     }, 1000);
     
-    
+
     // we'll need a place to store the HTML output
     const output = [];
   
@@ -79,8 +99,9 @@ const myQuestions = [
   
           // ...add an HTML button
           answers.push(
-            `<label>
-              <button name="question${questionNumber}" value="${letter}">
+            `<br>
+            <label>
+              <button name="question${questionNumber}" value="${letter}" class="button-answer">
               ${letter} :
               ${currentQuestion.answers[letter]}
               </button>
@@ -90,17 +111,19 @@ const myQuestions = [
   
         // add this question and its answers to the output
         output.push(
-          `<div class="question"> ${currentQuestion.question} </div>
+          `<br><div class="question"> ${currentQuestion.question} </div>
           <div class="answers"> ${answers.join('')} </div>`
         );
-      }
+        quizContainer.innerHTML = output.join('');    
+            wait();
+        }
     );
   
     // finally combine our output list into one string of HTML and put it on the page
     quizContainer.innerHTML = output.join('');
 }
 
-function showResults(){
+function checkAnswer(){
 
     // gather answer containers from our quiz
     const answerContainers = quizContainer.querySelectorAll('.answers');
@@ -119,13 +142,14 @@ function showResults(){
       // if answer is correct
       if(userAnswer===currentQuestion.correctAnswer){
         // add to the number of correct answers
-        numCorrect++;
+        resultsContainer.innerHTML = 'Correct!';
   
       }
-      // if answer is wrong or blank
+      // if answer is wrong
       else{
-        // color the answers red
-        answerContainers[questionNumber].style.color = 'red';
+        resultsContainer.innerHTML = 'Incorrect!';
+        // subtract 15 from timer
+        count -= 15;
       }
     });
   
@@ -137,4 +161,5 @@ function showResults(){
 
 
 // on start, load quiz
-submitButton.addEventListener('click', buildQuiz());
+startButton.addEventListener('click', buildQuiz);
+answerButtons.addEventListener("click", changeState);
