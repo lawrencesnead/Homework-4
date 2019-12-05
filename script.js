@@ -2,8 +2,13 @@ const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const timerContainer = document.getElementById('timer');
 const startButton = document.getElementById('start');
-
-var state = "";
+var answerContainer = document.getElementsByClassName("answers");
+var answerButtons = document.getElementsByClassName('button-answer');
+var questionCounter = 0;
+var questionNumber = 0;
+var userAnswer = "";
+var count = 75;
+var answerCheck = "";
 const myQuestions = [
     {
       question: "Who is responsible for lithium batteries and the modern age?",
@@ -51,115 +56,102 @@ const myQuestions = [
       },
       correctAnswer: "d"
     }
-  ];
+];
 
+function generateQuestion() {
+    var currentQuestion = myQuestions[questionCounter];
+    const output = [];
+    // we'll want to store the list of answer choices
+    const answers = [];
 
-function wait() {
-    var answerButtons = document.getElementsByClassName('button-answer');
-    answerButtons.addEventListener("click", changeState);
-    if (state === "wait") {
-        setTimeout(wait, 500)
+    // and for each available answer...
+    for (letter in currentQuestion.answers) {
+
+        // ...add an HTML button
+        answers.push(
+            `<br>
+        <label>
+        <button name="question${questionNumber}" value="${letter}" class="button-answer">
+        ${letter} :
+        ${currentQuestion.answers[letter]}
+        </button>
+        </label>`
+        );
     }
-    else {
-        return
-    }
+
+    // add this question and its answers to the output
+    output.push(
+        `<br><div class="question"> ${currentQuestion.question} </div>
+    <div class="answers"> ${answers.join('')} </div>`
+    );
+    quizContainer.innerHTML = output.join('');
+    $('.answers').click(function(event) {
+        userAnswer = event.target.value;
+        
+        console.log(userAnswer)
+        checkAnswer(userAnswer);
+    });
+    console.log(userAnswer);
+   
+
 }
 
 
-function changeState() {
-    state = "";
-}
 
 function buildQuiz() {
     startButton.style.visibility = 'hidden';
-    var count = 75;
-    var state = "wait"
+    count--;
     var interval = setInterval(function () {
         timerContainer.innerHTML = "Time: " + count;
         count--;
-        if (count === 0) {
+        if (count <= 0 ) {
             clearInterval(interval);
             alert("You're out of time!");
         }
     }, 1000);
     
-
-    // we'll need a place to store the HTML output
-    const output = [];
   
     // for each question...
-    myQuestions.forEach(
-      (currentQuestion, questionNumber) => {
-  
-        // we'll want to store the list of answer choices
-        const answers = [];
-  
-        // and for each available answer...
-        for(letter in currentQuestion.answers){
-  
-          // ...add an HTML button
-          answers.push(
-            `<br>
-            <label>
-              <button name="question${questionNumber}" value="${letter}" class="button-answer">
-              ${letter} :
-              ${currentQuestion.answers[letter]}
-              </button>
-            </label>`
-          );
-        }
-  
-        // add this question and its answers to the output
-        output.push(
-          `<br><div class="question"> ${currentQuestion.question} </div>
-          <div class="answers"> ${answers.join('')} </div>`
-        );
-        quizContainer.innerHTML = output.join('');    
-            wait();
-        }
-    );
-  
-    // finally combine our output list into one string of HTML and put it on the page
-    quizContainer.innerHTML = output.join('');
+    console.log("building")
+    generateQuestion();
+    
 }
 
-function checkAnswer(){
-
-    // gather answer containers from our quiz
-    const answerContainers = quizContainer.querySelectorAll('.answers');
-  
-    // keep track of user's answers
-    var numCorrect = 0;
-  
-    // for each question...
-    myQuestions.forEach( (currentQuestion, questionNumber) => {
-  
-      // find selected answer
-      const answerContainer = answerContainers[questionNumber];
-      const selector = 'input[name=question'+questionNumber+']:checked';
-      const userAnswer = (answerContainer.querySelector(selector) || {}).value;
-  
-      // if answer is correct
-      if(userAnswer===currentQuestion.correctAnswer){
-        // add to the number of correct answers
+function checkAnswer(userAnswer){
+    console.log(myQuestions[questionCounter].correctAnswer)
+    if (String(userAnswer) === myQuestions[questionCounter].correctAnswer) {
+        console.log(myQuestions[questionCounter].correctAnswer)
+        questionCounter++;
+        questionNumber++;
         resultsContainer.innerHTML = 'Correct!';
-  
-      }
-      // if answer is wrong
-      else{
-        resultsContainer.innerHTML = 'Incorrect!';
-        // subtract 15 from timer
+        // userAnswer = "";
+        generateQuestion();
+        setTimeout(function () {
+            resultsContainer.innerHTML = '';
+        }, 1000)
+    }
+    else if (questionCounter < 6) {
         count -= 15;
-      }
-    });
-  
-    // show number of correct answers out of total
-    resultsContainer.innerHTML = numCorrect + ' out of ' + myQuestions.length;
-  }
+        questionCounter++;
+        questionNumber++;
+        resultsContainer.innerHTML = 'Incorrect!';
+        userAnswer = "";
+        generateQuestion();
+        setTimeout(function () {
+            resultsContainer.innerHTML = '';
+        }, 1000)
+    }
+
+}
 
 // display quiz right away
 
 
 // on start, load quiz
 startButton.addEventListener('click', buildQuiz);
-answerButtons.addEventListener("click", changeState);
+// answerContainer.addEventListener('click', buton(event));
+// function buton(event) {
+//     var element = event.target
+//     userAnswer = element.val;
+//     checkAnswer();
+// }
