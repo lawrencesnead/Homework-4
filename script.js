@@ -5,6 +5,7 @@ const startButton = document.getElementById('start');
 var answerContainer = document.getElementsByClassName("answers");
 var answerButtons = document.getElementsByClassName('button-answer');
 var questionCounter = 0;
+var userScore = 0;
 var questionNumber = 0;
 var userAnswer = "";
 var count = 75;
@@ -58,41 +59,80 @@ const myQuestions = [
     }
 ];
 
-function generateQuestion() {
+function generateQuestion(interval) {
     var currentQuestion = myQuestions[questionCounter];
     const output = [];
     // we'll want to store the list of answer choices
     const answers = [];
 
     // and for each available answer...
-    for (letter in currentQuestion.answers) {
+    if (questionCounter < 5) {
+        for (letter in currentQuestion.answers) {
 
-        // ...add an HTML button
-        answers.push(
-            `<br>
+            // ...add an HTML button
+            answers.push(
+                `<br>
         <label>
         <button name="question${questionNumber}" value="${letter}" class="button-answer">
         ${letter} :
         ${currentQuestion.answers[letter]}
         </button>
         </label>`
-        );
-    }
+            );
+        }
 
-    // add this question and its answers to the output
-    output.push(
-        `<br><div class="question"> ${currentQuestion.question} </div>
+        // add this question and its answers to the output
+        output.push(
+            `<br><div class="question"> ${currentQuestion.question} </div>
     <div class="answers"> ${answers.join('')} </div>`
-    );
-    quizContainer.innerHTML = output.join('');
+        );
+        quizContainer.innerHTML = output.join('');
+    }
     $('.answers').click(function(event) {
         userAnswer = event.target.value;
         
         console.log(userAnswer)
-        checkAnswer(userAnswer);
+        if (questionCounter < 5) {
+            checkAnswer(userAnswer);
+        }
+        else {
+            userScore = count;
+            console.log(count)
+            clearInterval(interval)
+            output.push(
+                `<h1>All done!</h1>`
+            )
+            quizContainer.innerHTML = output.join('');
+        }
     });
-    console.log(userAnswer);
-   
+    if (questionCounter > 4) {
+        console.log(userAnswer);
+        userScore = count;
+        console.log(count)
+        clearInterval(interval)
+        output.push(
+            `<h1>All done!</h1>
+                <p>Your score is ${userScore}</p>
+            <form>
+                
+            <input type="text" id="username" value="Name"><br>
+            <input type="submit" id="sub-btn" value="Submit">
+            </form>`
+        )
+        quizContainer.innerHTML = output.join('');
+        $('#sub-btn').click(function () {
+            event.preventDefault();
+            userTemp = document.getElementById('username').value;
+            localStorage.setItem(userTemp, userScore);
+            output.push(
+                `<h1>High Score Board</h1>
+                <div class="score-list"></div>`
+            )
+            scoreBoard.push(
+
+            )
+        })
+    }
 
 }
 
@@ -113,13 +153,13 @@ function buildQuiz() {
   
     // for each question...
     console.log("building")
-    generateQuestion();
+    generateQuestion(interval);
     
 }
 
 function checkAnswer(userAnswer){
     console.log(myQuestions[questionCounter].correctAnswer)
-    if (String(userAnswer) === myQuestions[questionCounter].correctAnswer) {
+    if (String(userAnswer) === myQuestions[questionCounter].correctAnswer && questionCounter < 5) {
         console.log(myQuestions[questionCounter].correctAnswer)
         questionCounter++;
         questionNumber++;
@@ -130,7 +170,7 @@ function checkAnswer(userAnswer){
             resultsContainer.innerHTML = '';
         }, 1000)
     }
-    else if (questionCounter < 6) {
+    else if (questionCounter < 5) {
         count -= 15;
         questionCounter++;
         questionNumber++;
@@ -140,8 +180,7 @@ function checkAnswer(userAnswer){
         setTimeout(function () {
             resultsContainer.innerHTML = '';
         }, 1000)
-    }
-
+    } 
 }
 
 // display quiz right away
