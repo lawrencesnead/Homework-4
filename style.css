@@ -1,6 +1,31 @@
 #timer {
+    font-size: 20px;
     text-align: right;
+    color: blue;
+    
+}
+
+#highscores {
+    font-size: 20px;
+    text-align: left;
+    color: blue;
 }
 .wrapper {
     text-align: center;
+}
+
+.button-answer, #start {
+    background-color: purple;
+    border-radius: 12px; 
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.question, #quiz {
+    font-size: 20px;
+    font-weight: 600;
 }

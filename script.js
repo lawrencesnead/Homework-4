@@ -2,6 +2,7 @@ const quizContainer = document.getElementById('quiz');
 const resultsContainer = document.getElementById('results');
 const timerContainer = document.getElementById('timer');
 const startButton = document.getElementById('start');
+const scoreBoardLink = document.getElementById('highscores');
 var answerContainer = document.getElementsByClassName("answers");
 var answerButtons = document.getElementsByClassName('button-answer');
 var questionCounter = 0;
@@ -83,7 +84,7 @@ function generateQuestion(interval) {
 
         // add this question and its answers to the output
         output.push(
-            `<br><div class="question"> ${currentQuestion.question} </div>
+            `<br><div class="question"> ${currentQuestion.question} </div><br>
     <div class="answers"> ${answers.join('')} </div>`
         );
         quizContainer.innerHTML = output.join('');
@@ -124,13 +125,9 @@ function generateQuestion(interval) {
             event.preventDefault();
             userTemp = document.getElementById('username').value;
             localStorage.setItem(userTemp, userScore);
-            output.push(
-                `<h1>High Score Board</h1>
-                <div class="score-list"></div>`
-            )
-            scoreBoard.push(
+            
 
-            )
+            
         })
     }
 
