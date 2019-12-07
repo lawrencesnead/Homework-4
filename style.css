@@ -1,5 +1,5 @@
 
-#highscores {
+#highscores, #timer {
     font-size: 20px;
     text-align: left;
     color: blue;
@@ -8,17 +8,14 @@
 }
 
 #timer {
-    font-size: 20px;
+    
     text-align: right;
-    color: blue;
-    padding: 20px 10px 20px 10px;
-    width: 50%;
-
+    
     
 }
 
 
-.wrapper {
+.container {
     text-align: center;
 }
 
