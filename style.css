@@ -1,4 +1,7 @@
-
+h1 {
+    font-size: 30px;
+    text-decoration: underline;
+}
 #highscores, #timer {
     font-size: 20px;
     text-align: left;

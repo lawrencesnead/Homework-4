@@ -63,7 +63,7 @@ const myQuestions = [
 ];
 
 function generateScoreBoard() {
-    quizContainer.innerHTML = "<h1>High Scores</h1>";
+    quizContainer.innerHTML = "<h1>High Scores</h1><br>";
     var scoreboardTemp = JSON.parse(localStorage.getItem("scoreboard"));
     var playAgainBtn = [];
 // play again and reset scoreboard button
