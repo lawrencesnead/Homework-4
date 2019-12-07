@@ -65,8 +65,8 @@ const myQuestions = [
 function generateScoreBoard() {
     quizContainer.innerHTML = "<h1>High Scores</h1>";
     var scoreboardTemp = JSON.parse(localStorage.getItem("scoreboard"));
-  // Render a new li for each score
     var playAgainBtn = [];
+// play again and reset scoreboard button
     playAgainBtn.push(`<br>
     <label>
     <button id="play-again">Play Again?
@@ -75,6 +75,7 @@ function generateScoreBoard() {
     </button>
     </label>`)
     var ol = document.createElement("ol")
+    // Render a new li for each score but only if there is data to put into the list
     if (scoreboardTemp !== null) {
         for (var i = 0; i < scoreboardTemp.length; i++) {
         
@@ -89,9 +90,11 @@ function generateScoreBoard() {
 
     quizContainer.appendChild(ol);
     quizContainer.innerHTML += playAgainBtn.join('');
+    // Reset Button code
     $('#reset-score').click(function () {
         localStorage.clear();
-        quizContainer.innerHTML = '<h1>High Scores</h1>'+playAgainBtn.join();
+        scoreboard = [];
+        quizContainer.innerHTML = '<h1>High Scores</h1><br>'+playAgainBtn.join();
         $('#play-again').click(buildQuiz);
     });
     $('#play-again').click(buildQuiz);
@@ -146,22 +149,29 @@ function generateQuestion() {
     });
     if (questionCounter > 4) {
         console.log(userAnswer);
+        if (count < 0)
+            count = 0;
         userScore = count;
         console.log(count)
         clearInterval(interval)
         timerContainer.innerHTML = "Time: " + count;
         output.push(
-            `<h1>All done!</h1>
-                <p>Your score is ${userScore}</p>
+            `<h1>All done!</h1><br>
+            <p>Your score is ${userScore}</p><br>
             <form>
-                
-            <input type="text" id="username" value="Name"><br>
+             Enter Intials:   
+            <input type="text" id="username"><br><br>
             <input type="submit" id="sub-btn" value="Submit">
             </form>`
         )
         quizContainer.innerHTML = output.join('');
         $('#sub-btn').click(function () {
+            var userTemp = document.getElementById('username').value;
             event.preventDefault();
+            if (userTemp === "") {
+                alert("Must enter something for intials.")
+                return
+            }
             if (localStorage.length != 0)
                 scoreboard = JSON.parse(localStorage.getItem("scoreboard"));
             userTemp = document.getElementById('username').value;
@@ -186,7 +196,9 @@ function generateQuestion() {
 
 }
 
-
+// function to begin building the quiz. basically a constructor. 
+// Resets questionCounter and questionNumber to 0 so that when the user clicks play again,
+// the quiz starts over. This also starts my interval timer.
 
 function buildQuiz() {
     questionCounter = 0;
@@ -202,14 +214,12 @@ function buildQuiz() {
             generateScoreBoard();
         }
     }, 1000);
-    
-  
-    // for each question...
     console.log("building")
     generateQuestion();
     
 }
-
+// this function checks if the users answer to the question is right. 
+// It also increments the question counter so that the correct question is displayed
 function checkAnswer(userAnswer){
     console.log(myQuestions[questionCounter].correctAnswer)
     if (String(userAnswer) === myQuestions[questionCounter].correctAnswer && questionCounter < 5) {
@@ -237,9 +247,9 @@ function checkAnswer(userAnswer){
 }
 
 
-// on start, load quiz
+// on click listener
 startButton.addEventListener('click', buildQuiz);
-$('#highscores').click(function () {
+$('.link-highscore').click(function () {
     startButton.style.visibility = 'hidden';
     clearInterval(interval);
     generateScoreBoard();

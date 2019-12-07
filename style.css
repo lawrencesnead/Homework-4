@@ -14,6 +14,9 @@
     
 }
 
+#results {
+    font-size: 25px;
+}
 
 .container {
     text-align: center;
@@ -27,7 +30,7 @@
     text-align: center;
     text-decoration: none;
     display: inline-block;
-    font-size: 12px;
+    font-size: 15px;
 }
 
 .question, #quiz {
@@ -40,5 +43,9 @@
      text-align: center;
      width: 50%;
      margin: 0 auto;
+ }
+
+ .link-highscore:hover {
+     cursor: pointer;
  }
 
