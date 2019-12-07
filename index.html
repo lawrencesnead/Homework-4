@@ -6,14 +6,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
+  
   <title>Quiz</title>
 </head>
 
 <body>
-    <div class="top-bar">
-        <div id="timer">Time: 75</div>
-        <div id="highscores">High Scores</div>
+    <div class="container">
+        <div class="row">
+            <div id="highscores" class="col-xs-6 col-md-6 col-lg-6 col-centered">High Scores</div>
+            <div id="timer" class="col-xs-6 col-md-6 col-lg-6 col-centered">Time: 75</div>
+        </div>
     </div>
     <div class="wrapper"> 
     <div id="quiz">Welcome to Lawrence's silly quiz. You have 75 seconds to answer 5 questions correctly. Each wrong answer will cost you 15 seconds. Your score is simply the time remaining. Press start to begin!</div><br>

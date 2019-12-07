@@ -1,20 +1,26 @@
-#timer {
-    font-size: 20px;
-    text-align: right;
-    color: blue;
-    
-}
-
 #highscores {
     font-size: 20px;
     text-align: left;
     color: blue;
+
+    display: inline;
 }
+
+#timer {
+    font-size: 20px;
+    text-align: right;
+    color: blue;
+    display: inline;
+
+    
+}
+
+
 .wrapper {
     text-align: center;
 }
 
-.button-answer, #start, #play-again, #sub-btn {
+.button-answer, #start, #play-again, #sub-btn, #reset-score {
     background-color: purple;
     border-radius: 12px; 
     color: white;

@@ -63,32 +63,39 @@ const myQuestions = [
 ];
 
 function generateScoreBoard() {
-    quizContainer.innerHTML = "";
+    quizContainer.innerHTML = "<h1>High Scores</h1>";
     var scoreboardTemp = JSON.parse(localStorage.getItem("scoreboard"));
   // Render a new li for each score
-    var title = document.createElement("h1");
     var playAgainBtn = [];
     playAgainBtn.push(`<br>
     <label>
-    <button id="play-again" class="play">Play Again?
+    <button id="play-again">Play Again?
+    </button>
+    <button id="reset-score">Reset Scoreboard?
     </button>
     </label>`)
-    title.textContent = "High Scores";
     var ol = document.createElement("ol")
-    for (var i = 0; i < scoreboardTemp.length; i++) {
+    if (scoreboardTemp !== null) {
+        for (var i = 0; i < scoreboardTemp.length; i++) {
         
-        console.log(scoreboardTemp)
-        var li = document.createElement("li");
-        li.textContent = scoreboardTemp[i].username+" - "+scoreboardTemp[i].score;
-        li.setAttribute("data-index", i);
+            console.log(scoreboardTemp)
+            var li = document.createElement("li");
+            li.textContent = scoreboardTemp[i].username + " - " + scoreboardTemp[i].score;
+            li.setAttribute("data-index", i);
 
-        ol.appendChild(li);
+            ol.appendChild(li);
+        }
     }
-    
-    quizContainer.appendChild(title);
+
     quizContainer.appendChild(ol);
     quizContainer.innerHTML += playAgainBtn.join('');
+    $('#reset-score').click(function () {
+        localStorage.clear();
+        quizContainer.innerHTML = '<h1>High Scores</h1>'+playAgainBtn.join();
+        $('#play-again').click(buildQuiz);
+    });
     $('#play-again').click(buildQuiz);
+    
 }
 
 function generateQuestion() {
@@ -231,6 +238,10 @@ function checkAnswer(userAnswer){
 
 // on start, load quiz
 startButton.addEventListener('click', buildQuiz);
-$('#highscores').click(generateScoreBoard);
+$('#highscores').click(function () {
+    startButton.style.visibility = 'hidden';
+    clearInterval(interval);
+    generateScoreBoard();
+});
 
 
