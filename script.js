@@ -9,8 +9,10 @@ var questionCounter = 0;
 var userScore = 0;
 var questionNumber = 0;
 var userAnswer = "";
-var count = 75;
+var count;
 var answerCheck = "";
+var interval;
+var scoreboard = [];
 const myQuestions = [
     {
       question: "Who is responsible for lithium batteries and the modern age?",
@@ -60,13 +62,42 @@ const myQuestions = [
     }
 ];
 
-function generateQuestion(interval) {
+function generateScoreBoard() {
+    quizContainer.innerHTML = "";
+    var scoreboardTemp = JSON.parse(localStorage.getItem("scoreboard"));
+  // Render a new li for each score
+    var title = document.createElement("h1");
+    var playAgainBtn = [];
+    playAgainBtn.push(`<br>
+    <label>
+    <button id="play-again" class="play">Play Again?
+    </button>
+    </label>`)
+    title.textContent = "High Scores";
+    var ol = document.createElement("ol")
+    for (var i = 0; i < scoreboardTemp.length; i++) {
+        
+        console.log(scoreboardTemp)
+        var li = document.createElement("li");
+        li.textContent = scoreboardTemp[i].username+" - "+scoreboardTemp[i].score;
+        li.setAttribute("data-index", i);
+
+        ol.appendChild(li);
+    }
+    
+    quizContainer.appendChild(title);
+    quizContainer.appendChild(ol);
+    quizContainer.innerHTML += playAgainBtn.join('');
+    $('#play-again').click(buildQuiz);
+}
+
+function generateQuestion() {
     var currentQuestion = myQuestions[questionCounter];
     const output = [];
-    // we'll want to store the list of answer choices
+    // store the list of answer choices
     const answers = [];
 
-    // and for each available answer...
+    // for each available answer...
     if (questionCounter < 5) {
         for (letter in currentQuestion.answers) {
 
@@ -89,7 +120,7 @@ function generateQuestion(interval) {
         );
         quizContainer.innerHTML = output.join('');
     }
-    $('.answers').click(function(event) {
+    $('.button-answer').click(function(event) {
         userAnswer = event.target.value;
         
         console.log(userAnswer)
@@ -111,6 +142,7 @@ function generateQuestion(interval) {
         userScore = count;
         console.log(count)
         clearInterval(interval)
+        timerContainer.innerHTML = "Time: " + count;
         output.push(
             `<h1>All done!</h1>
                 <p>Your score is ${userScore}</p>
@@ -123,8 +155,22 @@ function generateQuestion(interval) {
         quizContainer.innerHTML = output.join('');
         $('#sub-btn').click(function () {
             event.preventDefault();
+            if (localStorage.length != 0)
+                scoreboard = JSON.parse(localStorage.getItem("scoreboard"));
             userTemp = document.getElementById('username').value;
-            localStorage.setItem(userTemp, userScore);
+            var tempUserObj = {};
+            tempUserObj = { username: userTemp, score: userScore }
+            scoreboard.push(tempUserObj);
+            console.log(scoreboard);
+            
+            scoreboard.sort(function (a, b) {
+                return parseInt(a.score) - parseInt(b.score)
+            });
+        
+    
+            localStorage.setItem("scoreboard", JSON.stringify(scoreboard.reverse()));
+            generateScoreBoard();
+            
             
 
             
@@ -136,11 +182,13 @@ function generateQuestion(interval) {
 
 
 function buildQuiz() {
+    questionCounter = 0;
+    questionNumber = 0;
+    count = 75;
     startButton.style.visibility = 'hidden';
-    count--;
-    var interval = setInterval(function () {
-        timerContainer.innerHTML = "Time: " + count;
+    interval = setInterval(function () {
         count--;
+        timerContainer.innerHTML = "Time: " + count;
         if (count <= 0 ) {
             clearInterval(interval);
             alert("You're out of time!");
@@ -150,7 +198,7 @@ function buildQuiz() {
   
     // for each question...
     console.log("building")
-    generateQuestion(interval);
+    generateQuestion();
     
 }
 
@@ -161,7 +209,7 @@ function checkAnswer(userAnswer){
         questionCounter++;
         questionNumber++;
         resultsContainer.innerHTML = 'Correct!';
-        // userAnswer = "";
+        userAnswer = "";
         generateQuestion();
         setTimeout(function () {
             resultsContainer.innerHTML = '';
@@ -180,14 +228,9 @@ function checkAnswer(userAnswer){
     } 
 }
 
-// display quiz right away
-
 
 // on start, load quiz
 startButton.addEventListener('click', buildQuiz);
-// answerContainer.addEventListener('click', buton(event));
-// function buton(event) {
-//     var element = event.target
-//     userAnswer = element.val;
-//     checkAnswer();
-// }
+$('#highscores').click(generateScoreBoard);
+
+

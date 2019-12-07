@@ -14,7 +14,7 @@
     text-align: center;
 }
 
-.button-answer, #start {
+.button-answer, #start, #play-again, #sub-btn {
     background-color: purple;
     border-radius: 12px; 
     color: white;
@@ -28,4 +28,10 @@
 .question, #quiz {
     font-size: 20px;
     font-weight: 600;
+    
 }
+ ol {
+     text-align: center;
+     width: 50%;
+     margin: 0 auto;
+ }
