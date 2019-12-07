@@ -199,6 +199,7 @@ function buildQuiz() {
         if (count <= 0 ) {
             clearInterval(interval);
             alert("You're out of time!");
+            generateScoreBoard();
         }
     }, 1000);
     
