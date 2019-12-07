@@ -1,16 +1,18 @@
+
 #highscores {
     font-size: 20px;
     text-align: left;
     color: blue;
-
-    display: inline;
+    padding: 20px 10px 20px 10px;
+    width: 50%;
 }
 
 #timer {
     font-size: 20px;
     text-align: right;
     color: blue;
-    display: inline;
+    padding: 20px 10px 20px 10px;
+    width: 50%;
 
     
 }
@@ -34,6 +36,7 @@
 .question, #quiz {
     font-size: 20px;
     font-weight: 600;
+    padding: 20px 30px 20px 30px;
     
 }
  ol {
@@ -41,3 +44,4 @@
      width: 50%;
      margin: 0 auto;
  }
+
